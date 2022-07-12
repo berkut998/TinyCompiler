@@ -35,9 +35,10 @@ namespace ConsoleApp1
         private Lexer lexer;
         private Token currentToken;
         private BinOp tmpBinOp;
-
+        private List<string> list_arguments;
         public Ast buildAST (string input)
         {
+            list_arguments = new List<string>(); 
             tmpBinOp = new BinOp();
             root = new BinOp();
             lexer = new Lexer(input);
@@ -46,11 +47,28 @@ namespace ConsoleApp1
             {
                 return null; //error or empety input
             }
-            add_sub(ref root);
+            getListArguments(ref root);
             root = root.leftNode;
             return root;
         }
+        private void getListArguments(ref Ast tree)
+        {
+            if (currentToken.content == "[")
+            {
+                currentToken = lexer.getToken();
+                while (currentToken.content != "]")
+                {
 
+                    if (currentToken.type == Token.tokenType.variable)
+                        list_arguments.Add(currentToken.content);
+                    else
+                        return;
+                    currentToken = lexer.getToken();
+                }
+                currentToken = lexer.getToken();
+            }
+            add_sub(ref tree);
+        }
         private void add_sub (ref Ast tree)
         {
 
@@ -130,16 +148,25 @@ namespace ConsoleApp1
             switch (currentToken.type)
             {
                 case Token.tokenType.number:
-                    addUnOp(ref tree, currentToken.content);
+                    addUnOp(ref tree,"imm" , Convert.ToInt32(currentToken.content));
                     currentToken = lexer.getToken();
                     break;
                 case Token.tokenType.variable:
-                    addUnOp(ref tree, currentToken.content);
+                    addUnOp(ref tree, "arg", getArgumentNumber(currentToken.content));//here number of argument
                     currentToken = lexer.getToken();
                     break;
                 default:
                     break;
             }
+        }
+        private int getArgumentNumber (string argumentName)
+        {
+            for (int i = 0; i < list_arguments.Count; i++)
+            {
+                if (list_arguments[i] == argumentName)
+                    return i;
+            }
+            return -1;
         }
 
         //maybe do not work
@@ -152,7 +179,7 @@ namespace ConsoleApp1
                 root.rightNode = new UnOp(content);
         }
 
-        private void addUnOp(ref Ast mainNode,string content)
+        private void addUnOp(ref Ast mainNode,string content, int val)
         {
              if (mainNode.leftNode == null)
                 mainNode.leftNode = new UnOp(content);

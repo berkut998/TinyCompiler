@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AstReducer.cs" />
     <Compile Include="AST_Builder.cs" />
     <Compile Include="Ast.cs" />
     <Compile Include="Lexer.cs" />

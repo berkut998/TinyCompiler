@@ -44,6 +44,52 @@ namespace ConsoleApp1
             preOrder_NLR(root.leftNode, ref result);
             preOrder_NLR(root.rightNode, ref result);
         }
+        public void preOrder_NRL(Ast root, ref string result)
+        {
+            if (root == null)
+                return;
+            result += root.content + ",";
+            preOrder_NRL(root.rightNode, ref result);
+            preOrder_NRL(root.leftNode, ref result);
+
+        }
+        public void preOrder_RNL(Ast root, ref string result)
+        {
+            if (root == null)
+                return;
+
+            preOrder_RNL(root.rightNode, ref result);
+            result += root.content + ",";
+            preOrder_RNL(root.leftNode, ref result);
+
+        }
+        public void preOrder_LNR(Ast root, ref string result)
+        {
+            if (root == null)
+                return;
+
+            preOrder_LNR(root.leftNode, ref result);
+            result += root.content + ",";
+            preOrder_LNR(root.rightNode, ref result);
+
+        }
+
+
+        public void levelOrder (Ast root,ref string result)
+        {
+            Queue<Ast> queue = new Queue<Ast>();
+            queue.Enqueue(root);
+            while (queue.Count != 0)
+            {
+                Ast currNode = queue.Dequeue();
+                result +=  currNode.content + ",";
+                if (currNode.rightNode != null)
+                    queue.Enqueue(currNode.rightNode);
+                if (currNode.leftNode != null)
+                    queue.Enqueue(currNode.leftNode);
+
+            }
+        }
     }
 
     public class BinOp : Ast
@@ -72,7 +118,7 @@ namespace ConsoleApp1
     }
     public class UnOp:Ast
     {
-        public int val_n;
+        private int val_n;
         public UnOp(string content)
         {
             this.content = content;
@@ -87,6 +133,4 @@ namespace ConsoleApp1
             return val_n;
         }
     }
-    //
-
 }
