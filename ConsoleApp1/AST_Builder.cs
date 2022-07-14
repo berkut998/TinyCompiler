@@ -34,12 +34,10 @@ namespace ConsoleApp1
         private Ast root;
         private Lexer lexer;
         private Token currentToken;
-        private BinOp tmpBinOp;
         private List<string> list_arguments;
         public Ast buildAST (string input)
         {
             list_arguments = new List<string>(); 
-            tmpBinOp = new BinOp();
             root = new BinOp();
             lexer = new Lexer(input);
             currentToken = lexer.getToken();
@@ -48,8 +46,8 @@ namespace ConsoleApp1
                 return null; //error or empety input
             }
             getListArguments(ref root);
-            root = root.leftNode;
-            return root;
+            BinOp rootNode = (BinOp)root;
+            return rootNode.a();
         }
         private void getListArguments(ref Ast tree)
         {
@@ -82,7 +80,6 @@ namespace ConsoleApp1
                 switch (oper)
                 {
                     case '+':
-    ///                     result = result + tmp_result;
                         addBinOp(ref tree, tmpTree, "+");
                         break;
                     case '-':
@@ -100,7 +97,7 @@ namespace ConsoleApp1
             {
                 Ast tmpTree = new BinOp();
                 currentToken = lexer.getToken();
-                mul_div(ref tmpTree);
+                unarMinus(ref tmpTree);
                 switch (oper)
                 {
                     case '*':
@@ -110,9 +107,7 @@ namespace ConsoleApp1
                         addBinOp(ref tree, tmpTree, "/");
                         break;
                 }
-
             }
-
         }
       
 
@@ -169,58 +164,36 @@ namespace ConsoleApp1
             return -1;
         }
 
-        //maybe do not work
-        //not work need tmp ast
-        private void setUnarOp (string content)
+        private void addUnOp(ref Ast mainNode, string content, int val)
         {
-            if (root.leftNode == null)
-                root.leftNode = new UnOp(content);
-            else if (root.rightNode == null)
-                root.rightNode = new UnOp(content);
-        }
-
-        private void addUnOp(ref Ast mainNode,string content, int val)
-        {
-             if (mainNode.leftNode == null)
-                mainNode.leftNode = new UnOp(content);
-            else //(mainNode.rightNode == null)
-                mainNode.rightNode = new UnOp(content);
-            //else
-            //{
-            //    Ast tmpAst = mainNode;
-            //    mainNode = new BinOp();
-            //    mainNode.rightNode = tmpAst;
-            //    mainNode.leftNode = new UnOp(content);
-            //}
+            mainNode = new BinOp (null, new UnOp(content, val), null);
         }
 
         private  void addBinOp(ref Ast root, Ast node, string content)
         {
-            
+            BinOp _root = (BinOp)root;
+            BinOp _node = (BinOp)node;
 
-            root.content = content;
-            //если правый узел в тмп результе = нулю то это просто число и переменная
-            if (node.rightNode == null && root.rightNode == null)
+            // if right node == nul when ir is just number(UnOp) 
+            if (_node.b() == null && _root.b() == null)
             {
-                root.rightNode = node.leftNode;
+                root = new BinOp(content, _root.a(), _node.a());
             }
-            else if (node.rightNode == null && node.leftNode == null)
+            else if (_node.b() == null && _node.a() == null)
             {
-                root.leftNode = node.leftNode;
+                root = new BinOp(content, _node.a(), _root.b());
             }
-            else if (root.rightNode == null)
+            else if (_root.b() == null)
             {
-                root.rightNode = node;
+                root = new BinOp(content, _root.a(),_node);
             }
-            else if (root.leftNode == null)
+            else if (_root.a() == null)
             {
-                root.leftNode = node.rightNode;
+                root = new BinOp(content, _node.b(),_root.b() );
             }
 
-                Ast tmpAst = root;
-                root = new BinOp();
-                //root.rightNode = node;
-                root.leftNode = tmpAst;
+            Ast tmpAst = root;
+            root = new BinOp(content, tmpAst,null);
         }
 
     }

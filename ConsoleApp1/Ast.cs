@@ -22,9 +22,9 @@ namespace ConsoleApp1
       */
     public abstract class Ast
     {
-        public Ast leftNode;
-        public Ast rightNode;
-        public string content;
+        protected Ast leftNode;
+        protected Ast rightNode;
+        protected string content;
 
         public Ast()
         { }

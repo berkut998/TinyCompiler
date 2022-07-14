@@ -8,8 +8,7 @@ namespace ConsoleApp1
 {
     class Program
     {
-        //TODO tree build right associative (can be error) maybe better if will be left associative
-        //a*b+c*d -> +,*,c,d,*,a,b,   should be a*b+c*d -> +,*,a,b,*,c,d,
+       
         static void Main(string[] args)
         {
             Token currentToken;
@@ -27,11 +26,21 @@ namespace ConsoleApp1
             UnOp unOp3 = new UnOp("c");
             UnOp unOp4 = new UnOp("d");
             BinOp binOp3 = new BinOp("+");
+            Ast ast = binOp1.a();
+            ast = unOp1;
             //addToAST(ref root, binOp1);
             //addToAST(ref root, binOp2);
             //addToAST(ref root, binOp3);
             AST_Builder astBuilder = new AST_Builder();
             Ast res1 = astBuilder.buildAST("[ x y z ] ( 2*3*x + 5*y - 3*z ) / (1 + 3 + 2*2)");
+            BinOp tmpRigthNodeRoot11 = (BinOp)res1;
+            BinOp tmpRigthNodeRoot = (BinOp)res1.GetType().GetMethod("a").Invoke(res1, null);
+            string StrNLR_mainAst = "";
+            res1.preOrder_NLR(res1, ref StrNLR_mainAst);
+            AstReducer reducer = new AstReducer();
+            res1 = reducer.reduceAst(res1);
+
+            //tmpRigthNodeRoot = node.GetType().GetMethod("a").Invoke(node, null);
             string StrNLR = "";
             string StrNRL = "";
             string StrRNL = "";
@@ -59,26 +68,26 @@ namespace ConsoleApp1
             //b *      a  b
         }
 
-        private static void addToAST(ref Ast root, Ast node)
-        {
-            if (root.rightNode != null && root.leftNode != null)
-            {
-                Ast tmpAst = root;
-                root = new BinOp();
-                root.rightNode = node;
-                root.leftNode = tmpAst;
-            }
-            else if (root.rightNode == null)
-            {
-                root.rightNode = node;
+        //private static void addToAST(ref Ast root, Ast node)
+        //{
+        //    if (root.rightNode != null && root.leftNode != null)
+        //    {
+        //        Ast tmpAst = root;
+        //        root = new BinOp();
+        //        root.rightNode = node;
+        //        root.leftNode = tmpAst;
+        //    }
+        //    else if (root.rightNode == null)
+        //    {
+        //        root.rightNode = node;
 
-            }
-            else if (root.leftNode == null)
-            {
+        //    }
+        //    else if (root.leftNode == null)
+        //    {
 
-                root.leftNode = node;
-            }
-        }
+        //        root.leftNode = node;
+        //    }
+        //}
 
 
     }

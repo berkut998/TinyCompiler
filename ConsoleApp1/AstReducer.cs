@@ -10,27 +10,30 @@ namespace ConsoleApp1
     {
         public Ast reduceAst (Ast root)
         {
-            return null;
+            reduce(ref root);
+            return root;
         }
 
-        //TODO need good Name
-        private int? calculate_1 (Ast node, ref int? a, ref int? b)
+        private void reduce (ref Ast node)
         {
-            int? local_a = null;
-            int? local_b = null;
-            if (node.content == null)
-                return null;
-            calculate_1(node.leftNode,ref local_a,ref local_b);
-            calculate_1(node.leftNode,ref local_a,ref local_b);
-
-            //set vvalue a,b
-            if (node.content == "imm" && local_a == null)
+            if (node.op() == null || node.op() == "arg" || node.op() == "imm")
+                return;
+            BinOp currBinOp = (BinOp)node;
+            Ast left = currBinOp.a();
+            Ast right = currBinOp.b();
+            reduce(ref left);
+            reduce(ref right);
+            if (left.op() == "imm" && right.op() == "imm")
             {
-                Type asd = node.GetType();
+                UnOp left_Unar = (UnOp)left;
+                UnOp right_Unar = (UnOp)right;
+                int? result = calculate(left_Unar.n(), right_Unar.n(), currBinOp.op()[0]);
+                node = new UnOp("imm", (int)result);
+                return;
             }
-            // if value was setted calculate
-            calculate(local_a, local_b,'+');
-            return null;
+                node = new BinOp(currBinOp.op(), left, right);
+
+            return;
         }
 
         private int? calculate (int? a, int? b, char operation)
