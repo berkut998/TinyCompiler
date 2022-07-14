@@ -43,9 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblerCodeGenerator.cs" />
     <Compile Include="AstReducer.cs" />
     <Compile Include="AST_Builder.cs" />
     <Compile Include="Ast.cs" />
+    <Compile Include="CompilerSimulator.cs" />
     <Compile Include="Lexer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -32,7 +32,7 @@ namespace ConsoleApp1
             //addToAST(ref root, binOp2);
             //addToAST(ref root, binOp3);
             AST_Builder astBuilder = new AST_Builder();
-            Ast res1 = astBuilder.buildAST("[ x y z ] ( 2*3*x + 5*y - 3*z ) / (1 + 3 + 2*2)");
+            Ast res1 = astBuilder.buildAST("[ first second ] (first + second) / 2"); //6 + 5 - 3 / 8   -> 1
             BinOp tmpRigthNodeRoot11 = (BinOp)res1;
             BinOp tmpRigthNodeRoot = (BinOp)res1.GetType().GetMethod("a").Invoke(res1, null);
             string StrNLR_mainAst = "";
@@ -51,6 +51,15 @@ namespace ConsoleApp1
             res1.preOrder_RNL(res1, ref StrRNL);
             res1.preOrder_LNR(res1, ref StrLNR);
             res1.levelOrder(res1, ref StrLevel);
+
+            AssemblerCodeGenerator assemblerCodeGenerator = new AssemblerCodeGenerator();
+            List<string> resultAssembler = assemblerCodeGenerator.GenerateCode(res1);
+            string output = "";
+            foreach (string str in resultAssembler)
+            {
+                output += str;
+            }
+           int result = CompilerSimulator.simulate(resultAssembler, new int[] { 15, 5 });
             // ("/",  ("-",  ("+",  ("*",  ("*",  ("", 2),  ("imm", 3)),  ("arg", 0)),  ("*",  ("imm", 5),  ("arg", 1))),  ("*",  ("imm", 3),  ("arg", 2))),  ("+",  ("+",  ("imm", 1),  ("imm", 3)),  ("*",  ("imm", 2),  ("imm", 2))));
             astBuilder.buildAST("a+b+c+d");
             //test1 = test1.add("+", test1);
