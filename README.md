@@ -32,6 +32,10 @@ Small processor with two registers (R0 and R1), a stack, and an array of input a
     "MU"       // multiply R0 by R1 and put the result in R0
     "DI"       // divide R0 by R1 and put the result in R0
 
+
+
+Do not support error processing, all input should be valid.
+
 Application screenshots:
 
 ![image](https://user-images.githubusercontent.com/66470614/179271888-e0cd1c30-68c5-430f-893f-814245086ee9.png)
