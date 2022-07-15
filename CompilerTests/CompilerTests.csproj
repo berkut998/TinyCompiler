@@ -49,18 +49,19 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AstBuilderTest.cs" />
+    <Compile Include="AstBuilderTester.cs" />
+    <Compile Include="AstReducerTester.cs" />
     <Compile Include="CompilerTester.cs" />
-    <Compile Include="LexerTest.cs" />
+    <Compile Include="LexerTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConsoleApp1\ConsoleApp1.csproj">
+    <ProjectReference Include="..\Compiler\Compiler.csproj">
       <Project>{1333649b-b516-4a72-9a54-192a0d63259f}</Project>
-      <Name>ConsoleApp1</Name>
+      <Name>Compiler</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

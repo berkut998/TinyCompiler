@@ -1,11 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using ConsoleApp1;
+using Compiler;
 using System.Collections.Generic;
 namespace CompilerTests
 {
     [TestClass]
-    public class LexerTest
+    public class LexerTester
     {
         private bool listIsEqual(List<Token> list1, List<Token> list2)
         {

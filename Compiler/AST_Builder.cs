@@ -1,34 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ConsoleApp1
+
+namespace Compiler
 {
 
-    //The first pass will be the method pass1 which takes a string representing a function in the
-    //    original programming language and will return a(JSON) object that represents that
-    //    Abstract Syntax Tree.The Abstract Syntax Tree must use the following representations:
-
-
-
-
-    /*
-     
-      // Each node is of type 'Ast' and has the following methods:
-      // Ast has method 'op()' returning 'String'
-      // BinOp has methods 'a()' and 'b()', both return 'Ast'
-      // UnOp has method 'n()' returning 'int'
-      new BinOp('+', a, b)       // add subtree a to subtree b
-      new BinOp('-', a, b)       // subtract subtree b from subtree a
-      new BinOp('*', a, b)       // multiply subtree a by subtree b
-      new BinOp('/', a, b)       // divide subtree a from subtree b
-      new UnOp('arg', n)         // reference to n-th argument, n integer
-      new UnOp('imm', n)         // immediate value n, n integer
-     
-     
-     */
     public class AST_Builder
     {
         private Ast root;
@@ -122,7 +98,7 @@ namespace ConsoleApp1
             paretheses(ref tree);
             if (oper == '-')
             {
-                //result = -result;
+                //result = -result; useless 
             }
         }
         private void paretheses(ref Ast tree)
@@ -147,7 +123,7 @@ namespace ConsoleApp1
                     currentToken = lexer.getToken();
                     break;
                 case Token.tokenType.variable:
-                    addUnOp(ref tree, "arg", getArgumentNumber(currentToken.content));//here number of argument
+                    addUnOp(ref tree, "arg", getArgumentNumber(currentToken.content));
                     currentToken = lexer.getToken();
                     break;
                 default:
@@ -174,7 +150,7 @@ namespace ConsoleApp1
             BinOp _root = (BinOp)root;
             BinOp _node = (BinOp)node;
 
-            // if right node == nul when ir is just number(UnOp) 
+            // if right node == nul when it is just number(UnOp) 
             if (_node.b() == null && _root.b() == null)
             {
                 root = new BinOp(content, _root.a(), _node.a());

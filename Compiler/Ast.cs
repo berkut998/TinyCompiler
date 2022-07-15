@@ -1,25 +1,16 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ConsoleApp1
+namespace Compiler
 {
-
-
-       /*
-       // Each node is of type 'Ast' and has the following methods:
-       // Ast has method 'op()' returning 'String'
-       // BinOp has methods 'a()' and 'b()', both return 'Ast'
-       // UnOp has method 'n()' returning 'int'
-       new BinOp('+', a, b)       // add subtree a to subtree b
-       new BinOp('-', a, b)       // subtract subtree b from subtree a
-       new BinOp('*', a, b)       // multiply subtree a by subtree b
-       new BinOp('/', a, b)       // divide subtree a from subtree b
-       new UnOp('arg', n)         // reference to n-th argument, n integer
-       new UnOp('imm', n)         // immediate value n, n integer
-      */
+    /*
+    next methods is useless and need only for debugging:
+    preOrder_NLR
+    preOrder_NRL
+    preOrder_RNL
+    preOrder_LNR
+    levelOrder
+     */
     public abstract class Ast
     {
         protected Ast leftNode;

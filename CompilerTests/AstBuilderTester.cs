@@ -1,10 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using ConsoleApp1;
+using Compiler;
 namespace CompilerTests
 {
     [TestClass]
-    public class AstBuilderTest
+    public class AstBuilderTester
     {
 
         private bool check(Ast tree, string Expecteed)
@@ -23,16 +23,16 @@ namespace CompilerTests
             AST_Builder astBuider = new AST_Builder();
 
             Ast result1 = astBuider.buildAST("a + b");
-            Assert.IsTrue(check (result1,"+,a,b"));
+            Assert.IsTrue(check (result1,"+,arg,arg"));
 
             result1 = astBuider.buildAST("a - b");
-            Assert.IsTrue(check(result1, "-,a,b"));
+            Assert.IsTrue(check(result1, "-,arg,arg"));
 
             result1 = astBuider.buildAST("a * b");
-            Assert.IsTrue(check(result1, "*,a,b"));
+            Assert.IsTrue(check(result1, "*,arg,arg"));
 
             result1 = astBuider.buildAST("a / b");
-            Assert.IsTrue(check(result1, "/,a,b"));
+            Assert.IsTrue(check(result1, "/,arg,arg"));
         }
 
         [TestMethod]
@@ -41,13 +41,13 @@ namespace CompilerTests
             AST_Builder astBuider = new AST_Builder();
 
             Ast result1 = astBuider.buildAST("a + b * c + d");
-            //Assert.IsTrue(check(result1, "+,d,+,a,*,b,c"));
+            Assert.IsTrue(check(result1, "+,+,arg,*,arg,arg,arg"));
 
             result1 = astBuider.buildAST("(2 - a) / d");
-            Assert.IsTrue(check(result1, "/,d,-,2,a"));
+            Assert.IsTrue(check(result1, "/,-,imm,arg,arg"));
 
             result1 = astBuider.buildAST("(1+3) * (a + x)");
-            Assert.IsTrue(check(result1, "*,+,1,3,+,a,x"));
+            Assert.IsTrue(check(result1, "*,+,imm,imm,+,arg,arg"));
         }
 
         [TestMethod]
@@ -56,17 +56,14 @@ namespace CompilerTests
             AST_Builder astBuider = new AST_Builder();
 
             Ast result1 = astBuider.buildAST("[ x y z ] ( 2*3*x + 5*y - 3*z ) / (1 + 3 + 2*2)");
-            Ast t1 = new BinOp("/", new BinOp("-", new BinOp("+", new BinOp("*", new BinOp("*", new UnOp("imm", 2), new UnOp("imm", 3)), new UnOp("arg", 0)), new BinOp("*", new UnOp("imm", 5), new UnOp("arg", 1))), new BinOp("*", new UnOp("imm", 3), new UnOp("arg", 2))), new BinOp("+", new BinOp("+", new UnOp("imm", 1), new UnOp("imm", 3)), new BinOp("*", new UnOp("imm", 2), new UnOp("imm", 2))));
-            Assert.AreEqual(result1, t1);
+            Assert.IsTrue (check (result1, "/,-,+,*,*,imm,imm,arg,*,imm,arg,*,imm,arg,+,+,imm,imm,*,imm,imm"));
 
             result1 = astBuider.buildAST("(2 - a) / d");
-            Assert.IsTrue(check(result1, "/,d,-,2,a"));
+            Assert.IsTrue(check(result1, "/,-,imm,arg,arg"));
 
             result1 = astBuider.buildAST("(1+3) * (a + x)");
-            Assert.IsTrue(check(result1, "*,+,1,3,+,a,x"));
+            Assert.IsTrue(check(result1, "*,+,imm,imm,+,arg,arg"));
         }
-        // string prog = 
-        // Console.WriteLine("Testing: "+prog);
-        // Ast p1 = compiler.pass1(prog);
+
     }
 }

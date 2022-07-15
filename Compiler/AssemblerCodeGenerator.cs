@@ -1,26 +1,13 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ConsoleApp1
+
+namespace Compiler
 {
-    public class AssemblerCodeGenerator
-    {
-
-        private int stackCount;
-        List<string> result  = new List<string>();
-
-        public AssemblerCodeGenerator ()
-        {
-            result = new List<string>();
-        }
-        /*
-       
+     /*
+       example:
          new BinOp("+", new UnOp("arg", 0), new UnOp("imm", 10))  ----- >    [ "IM 10", "SW", "AR 0", "AD" ] 
-
-         You are working on a small processor 
+        working on a small processor 
         with two registers (R0 and R1),
         a stack, 
         and an array of input arguments.
@@ -38,57 +25,55 @@ namespace ConsoleApp1
             "DI"       // divide R0 by R1 and put the result in R0
          
          */
-        public List<string> GenerateCode(Ast node)
+    public class AssemblerCodeGenerator
+    {
+
+        private static int stackCount;
+
+        public static List<string> generateCode(Ast root)
         {
-
-            /*
-			// ADD TO r0
-			// SWAP 
-			// ADD NEXT TO R0
-			// CALCULATE
-			// ADD TO STACK
-			// check left check right
-            */
-
+            stackCount = 0;
+            List<string> result  = new List<string>();
+            generateAssemblerCode(root,ref result);
+            if (result.Count == 0)
+            {
+                UnOp _root = (UnOp)root;
+                result.Add("IM" + _root.n()); 
+            }
+            return result;
+        }
+       
+        private static void generateAssemblerCode (Ast node, ref List<string> result)
+        {
             if (node.op() == null || node.op() == "arg" || node.op() == "imm")
-                return null;// return;
+                return ;
             BinOp _currentNode = (BinOp)node;
             Ast left = (Ast)_currentNode.a();
             Ast right = (Ast)_currentNode.b();
-
-            GenerateCode(left);
-            GenerateCode(right);
-            if (right.op() == "arg")
-            {
-                UnOp right_UnOp = (UnOp)right;
-                result.Add("AR" + right_UnOp.n());
-            }
-            else if (right.op() == "imm")
-            {
-                UnOp right_UnOp = (UnOp)right;
-                result.Add("IM" + right_UnOp.n());
-            }
-            else if (stackCount > 0)
-                result.Add("PO");
+            generateAssemblerCode(left,ref result);
+            generateAssemblerCode(right, ref result);
+            addDataToRegister(ref right, ref result);
             result.Add("SW");
-            if (left.op() == "arg")
+            addDataToRegister(ref left, ref result);
+            createCodeForOperation(_currentNode.op()[0], ref result);
+            
+        }
+        private static void addDataToRegister(ref Ast node, ref List<string> result)
+        {
+            if (node.op() == "arg")
             {
-                UnOp left_UnOp = (UnOp)left;
-                result.Add("AR" + left_UnOp.n());
+                UnOp node_UnOp = (UnOp)node;
+                result.Add("AR" + node_UnOp.n());
             }
-            else if (left.op() == "imm")
+            else if (node.op() == "imm")
             {
-                UnOp left_UnOp = (UnOp)left;
-                result.Add("IM" + left_UnOp.n());
+                UnOp node_UnOp = (UnOp)node;
+                result.Add("IM" + node_UnOp.n());
             }
             else if (stackCount > 0)
                 result.Add("PO");
-
-          
-            GenerateCODE(_currentNode.op()[0], ref result);
-            return result;
         }
-        private void GenerateCODE(char operation,ref List<string>result)
+        private static void createCodeForOperation(char operation,ref List<string>result)
         {
             switch (operation)
             {
